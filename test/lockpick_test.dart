@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('Lockpick', () {
-    test('can be instantiated', () {
+    test('example', () {
       expect(1, 1);
     });
   });
