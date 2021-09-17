@@ -1,6 +1,7 @@
 name: lockpick
-description: A CLI for syncing Dart dependency versions between pubspec.yaml and pubspec.lock files.
-version: 0.0.1
+description: A CLI for syncing Dart dependency versions between pubspec.yaml and
+  pubspec.lock files.
+version: 0.0.2
 homepage: https://github.com/jeroen-meijer/lockpick
 
 environment:
@@ -10,12 +11,19 @@ dependencies:
   args: ^2.3.0
   cli_dialog: ^0.5.0
   equatable: ^2.0.3
+  indent: ^2.0.0
+  io: ^1.0.3
+  mason: ^0.0.1-dev.47
+  meta: ^1.7.0
   path: ^1.8.0
   pubspec_parse: ^1.0.0
   universal_io: ^2.0.4
   yaml: ^3.1.0
 
 dev_dependencies:
+  build_runner: ^2.1.2
+  build_verify: ^2.0.0
+  build_version: ^2.1.0
   test: ^1.17.0
   very_good_analysis: ^2.3.0
 

@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
-
-/// TODO: Document this.
-enum CaretSyntaxPreference { always, never, auto }
+import 'package:lockpick/src/models/models.dart';
 
 /// {@template launch_config}
 /// The launch configuration for the Lockpick CLI.
