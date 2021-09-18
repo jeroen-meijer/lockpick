@@ -40,7 +40,7 @@ jobs:
       - name: Check Code Coverage
         uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
         with:
-          path: packages/spacex_api/coverage/lcov.info
+          path: coverage/lcov.info
           exclude: "**/*.g.dart **/*.gen.dart"
 
   pana:
