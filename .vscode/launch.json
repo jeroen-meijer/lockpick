@@ -5,11 +5,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "lockpick",
+      "name": "Run sync command",
       "request": "launch",
       "type": "dart",
       "program": "bin/lockpick.dart",
-      "args": ["/Users/jeroen/Projects/work/jasje_leggen"]
+      "args": ["sync"]
     }
   ]
 }

@@ -1,6 +1,7 @@
 import 'package:indent/indent.dart';
 import 'package:io/ansi.dart';
 import 'package:mason/mason.dart';
+import 'package:path/path.dart' as path;
 import 'package:universal_io/io.dart';
 
 /// {@template dart_cli}
@@ -14,16 +15,54 @@ class DartCli {
 
   final Logger _logger;
 
+  /// Returns true if the project at the given [path] is a Flutter project.
+  ///
+  /// The provided [path] be a directory and contain a `pubspec.yaml` file.
+  /// This file will be checked for the following string:
+  /// ```yaml
+  /// # ...
+  ///   flutter:
+  ///     sdk: <version>
+  /// # ...
+  /// ```
+  Future<bool> isFlutterProject(String projectPath) async {
+    final contents =
+        await File(path.join(projectPath, 'pubspec.yaml')).readAsString();
+    return RegExp(r'flutter:\n[ \t]+sdk:').hasMatch(contents);
+  }
+
   /// Runs `pub get`.
   ///
-  /// If [useFlutter] is set to `true`, this will run `flutter pub get`.
+  /// If [useFlutterCli] is set to `null` (the default), the type of project
+  /// will be automatically detected.
   Future<void> pubGet({
-    bool useFlutter = false,
+    bool? useFlutterCli,
     String? workingDirectory,
-  }) {
-    return _run(
+  }) async {
+    final useFlutter =
+        useFlutterCli ?? await isFlutterProject(workingDirectory ?? '.');
+
+    await _run(
       useFlutter ? 'flutter' : 'dart',
       ['pub', 'get'],
+      workingDirectory: workingDirectory,
+    );
+  }
+
+  /// Runs `pub upgrade`.
+  ///
+  /// If [useFlutterCli] is set to `null` (the default), the type of project
+  /// will be automatically detected.
+  Future<void> pubUpgrade({
+    bool? useFlutterCli,
+    String? workingDirectory,
+  }) async {
+    final useFlutter =
+        useFlutterCli ?? await isFlutterProject(workingDirectory ?? '.');
+
+    await _run(
+      useFlutter ? 'flutter' : 'dart',
+      ['pub', 'upgrade'],
       workingDirectory: workingDirectory,
     );
   }
