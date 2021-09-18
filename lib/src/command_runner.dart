@@ -2,6 +2,7 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:io/ansi.dart';
 import 'package:io/io.dart';
+import 'package:lockpick/src/extensions/extensions.dart';
 import 'package:lockpick/src/commands/commands.dart';
 import 'package:lockpick/src/version.dart';
 import 'package:mason/mason.dart';
@@ -20,11 +21,13 @@ class LockpickCommandRunner extends CommandRunner<int> {
           'A CLI for syncing Dart dependency versions '
               'between pubspec.yaml and pubspec.lock files. 🔒',
         ) {
-    argParser.addFlag(
-      'version',
-      negatable: false,
-      help: 'Print the current version of lockpick.',
-    );
+    argParser
+      ..addFlag(
+        'version',
+        negatable: false,
+        help: 'Print the current version of lockpick.',
+      )
+      ..addVerboseFlag();
     addCommand(SyncCommand(logger: logger));
   }
 

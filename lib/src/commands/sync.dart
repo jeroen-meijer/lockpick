@@ -25,6 +25,7 @@ class SyncCommand extends Command<int> {
   })  : _dartCli = dartCli ?? DartCli(),
         _logger = logger ?? Logger() {
     argParser
+      ..addVerboseFlag()
       ..addFlag(
         'empty-only',
         abbr: 'e',
@@ -99,6 +100,10 @@ class SyncCommand extends Command<int> {
 
   @override
   Future<int> run() async {
+    if (isVerboseEnabled) {
+      _logger.debug('Running in verbose mode.');
+    }
+
     final emptyOnly = _argResults['empty-only'] as bool;
 
     final workingDirectory = _argResults.rest.isEmpty
@@ -146,6 +151,7 @@ class SyncCommand extends Command<int> {
       workingDirectory: workingDirectory,
       caretSyntaxPreference: caretSyntaxPreference,
       dependencyTypes: dependencyTypes,
+      isVerboseEnabled: isVerboseEnabled,
     );
 
     return Sync(
@@ -164,12 +170,14 @@ class SyncArgs extends Equatable {
     required this.workingDirectory,
     required this.caretSyntaxPreference,
     required this.dependencyTypes,
+    required this.isVerboseEnabled,
   });
 
   final bool emptyOnly;
   final Directory workingDirectory;
   final CaretSyntaxPreference caretSyntaxPreference;
   final List<DependencyType> dependencyTypes;
+  final bool isVerboseEnabled;
 
   @override
   List<Object> get props => [
@@ -177,6 +185,7 @@ class SyncArgs extends Equatable {
         workingDirectory,
         caretSyntaxPreference,
         dependencyTypes,
+        isVerboseEnabled,
       ];
 }
 
@@ -237,14 +246,16 @@ class Sync {
                 ))
             .toList(growable: false);
 
-    _logger
-      ..info('This command has not been implemented yet.')
-      ..info(lightGray.wrap(const JsonEncoder.withIndent('  ').convert({
+    _logger.info('This command has not been implemented yet.');
+
+    if (_args.isVerboseEnabled) {
+      _logger.debug(lightGray.wrap(const JsonEncoder.withIndent('  ').convert({
         'debug_data': {
-          'direct_packages': directPackages,
-          'dependencies': dependencies,
+          'direct_packages': directPackages.map((p) => p.name).toList(),
+          'dependencies': dependencies.map((p) => p.name).toList(),
         },
       })));
+    }
 
     return 0;
   }
