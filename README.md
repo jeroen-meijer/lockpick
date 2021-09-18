@@ -5,6 +5,19 @@
 
 A CLI for syncing Dart dependency versions between pubspec.yaml and pubspec.lock files. 🔒
 
+## Usage
+
+```sh
+# Activate lockpick
+pub global activate lockpick
+
+# See usage information
+lockpick --help
+
+# Sync dependency versions in the current directory
+lockpick sync ./
+```
+
 [license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [license_link]: https://opensource.org/licenses/MIT
 [very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
