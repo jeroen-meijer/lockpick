@@ -4,8 +4,8 @@ import 'package:io/ansi.dart';
 import 'package:io/io.dart';
 import 'package:lockpick/src/commands/commands.dart';
 import 'package:lockpick/src/extensions/extensions.dart';
+import 'package:lockpick/src/logger.dart';
 import 'package:lockpick/src/version.dart';
-import 'package:mason/mason.dart';
 
 /// {@template lockpick_command_runner}
 /// A CLI for syncing Dart dependency versions between pubspec.yaml and

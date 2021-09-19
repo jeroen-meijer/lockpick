@@ -4,8 +4,8 @@ import 'package:equatable/equatable.dart';
 import 'package:io/ansi.dart';
 import 'package:lockpick/src/dart_cli.dart';
 import 'package:lockpick/src/extensions/extensions.dart';
+import 'package:lockpick/src/logger.dart';
 import 'package:lockpick/src/models/models.dart';
-import 'package:mason/mason.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
 import 'package:universal_io/io.dart';
@@ -106,7 +106,7 @@ class SyncCommand extends Command<int> {
 
   @override
   Future<int> run() async {
-    LoggerExtensions.isVerboseEnabled = isVerboseFlagSet;
+    Logger.verboseEnabled = isVerboseFlagSet;
 
     _logger.debug('Running in verbose mode.');
 
