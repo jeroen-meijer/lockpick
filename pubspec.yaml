@@ -13,7 +13,6 @@ dependencies:
   equatable: ^2.0.3
   indent: ^2.0.0
   io: ^1.0.3
-  mason: ^0.0.1-dev.47
   meta: ^1.7.0
   path: ^1.8.0
   pubspec_parse: ^1.1.0

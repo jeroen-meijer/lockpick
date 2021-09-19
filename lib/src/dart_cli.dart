@@ -1,6 +1,6 @@
 import 'package:indent/indent.dart';
 import 'package:io/ansi.dart';
-import 'package:mason/mason.dart';
+import 'package:lockpick/src/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:universal_io/io.dart';
 
