@@ -39,12 +39,14 @@ class LockpickCommandRunner extends CommandRunner<int> {
   @override
   Future<int> run(Iterable<String> args) async {
     try {
-      final _argResults = parse(args);
-      return await runCommand(_argResults) ?? ExitCode.success.code;
-    } on FormatException catch (e, stackTrace) {
+      if (args.isEmpty) {
+        throw UsageException('No command specified.', '');
+      } else {
+        return await runCommand(parse(args)) ?? ExitCode.success.code;
+      }
+    } on FormatException catch (e) {
       _logger
         ..err(e.message)
-        ..err('$stackTrace')
         ..info('')
         ..info(usage);
       return ExitCode.usage.code;
