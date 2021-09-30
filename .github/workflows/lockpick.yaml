@@ -7,14 +7,6 @@ on:
       - "lib/**"
       - "test/**"
       - "pubspec.yaml"
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/lockpick.yaml"
-      - "lib/**"
-      - "test/**"
-      - "pubspec.yaml"
 
 jobs:
   build:

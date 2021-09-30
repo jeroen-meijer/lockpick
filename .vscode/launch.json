@@ -10,6 +10,13 @@
       "type": "dart",
       "program": "bin/lockpick.dart",
       "args": ["sync"]
+    },
+    {
+      "name": "Run sync on SpaceX demo",
+      "request": "launch",
+      "type": "dart",
+      "program": "bin/lockpick.dart",
+      "args": ["sync", "/Users/jeroen/Projects/work/vgv/other/spacex_demo"]
     }
   ]
 }
