@@ -319,20 +319,25 @@ class Sync {
     required bool useCaretSyntax,
   }) async {
     final lines = contents.split('\n');
-    final typeName = change.type.getPubspecName();
+    final dependencyTypeName = change.type.getPubspecName();
 
     var hasEncounteredType = false;
     for (var i = 0; i < lines.length; i++) {
       final line = lines[i];
       final trimmed = line.trim();
-      if (trimmed == '$typeName:') {
-        hasEncounteredType = true;
-      } else if (hasEncounteredType && trimmed.startsWith(change.name)) {
-        final firstCharIndex = line.split('').indexWhere((char) => char != ' ');
-        final whitespace = ' ' * firstCharIndex;
-        final newVersionString =
-            '${useCaretSyntax ? '^' : ''}${change.newVersion}';
-        lines[i] = '$whitespace${change.name}: $newVersionString';
+      final colonIndex = trimmed.indexOf(':');
+      if (colonIndex != -1) {
+        final key = trimmed.substring(0, colonIndex);
+        if (key == dependencyTypeName) {
+          hasEncounteredType = true;
+        } else if (hasEncounteredType && key == change.name) {
+          final firstCharIndex =
+              line.split('').indexWhere((char) => char != ' ');
+          final whitespace = ' ' * firstCharIndex;
+          final newVersionString =
+              '${useCaretSyntax ? '^' : ''}${change.newVersion}';
+          lines[i] = '$whitespace${change.name}: $newVersionString';
+        }
       }
     }
 
