@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: dart:3.0.0
+      image: dart:3.0.5
 
     steps:
       - uses: actions/checkout@v2
@@ -21,7 +21,7 @@ jobs:
         run: dart pub get
 
       - name: Format
-        run: dart format --dry-run --set-exit-if-changed lib test
+        run: dart format --set-exit-if-changed lib test
 
       - name: Analyze
         run: dart analyze --fatal-infos --fatal-warnings .
@@ -38,7 +38,7 @@ jobs:
   pana:
     runs-on: ubuntu-latest
     container:
-      image: dart:3.0.0
+      image: dart:3.0.5
 
     steps:
       - uses: actions/checkout@v2.3.4

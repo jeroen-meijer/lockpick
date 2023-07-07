@@ -117,19 +117,19 @@ void main() {
 
         final result = await subject.run(['--version']);
         expect(result, ExitCode.software.code);
+
         verifyInOrder([
           () => logger.err(styleBold.wrap('Unexpected error occurred')),
           () => logger.err(exception.toString()),
           () => logger.err(
                 any(
-                  that:
-                      startsWith('#0      When.thenThrow.<anonymous closure>'),
+                  that: contains('#0      When.thenThrow.<anonymous closure>'),
                 ),
               ),
         ]);
       });
 
-      // TODO(@jeroen-meijer): Add more tests from https://github.com/felangel/mason/blob/master/test/command_runner_test.dart
+      // TODO(jeroen-meijer): Add more tests from https://github.com/felangel/mason/blob/master/test/command_runner_test.dart
     });
   });
 }

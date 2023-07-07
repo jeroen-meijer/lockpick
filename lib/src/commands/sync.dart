@@ -86,7 +86,7 @@ class SyncCommand extends Command<int> {
   @override
   String get description =>
       'Syncs dependencies between a pubspec.yaml and a pubspec.lock file. '
-      'Will run "[flutter] pub get" and "[flutter] pub upgade" in '
+      'Will run "[flutter] pub get" and "[flutter] pub upgrade" in '
       'the specified project path before syncing.';
 
   @override
@@ -348,7 +348,7 @@ class Sync {
       }
     }
 
-    assert(hasEncounteredType);
+    assert(hasEncounteredType, 'Could not find dependency type in pubspec.');
 
     return lines.join('\n');
   }
@@ -432,10 +432,10 @@ class Sync {
 
     _logger.info('');
 
-    final applyableChanges = allChanges.where((change) => change.hasChange);
+    final applicableChanges = allChanges.where((change) => change.hasChange);
 
     if (_args.dryRun) {
-      if (applyableChanges.isNotEmpty) {
+      if (applicableChanges.isNotEmpty) {
         _logger.warn('Dry-run mode: some changes would be made.');
         return const SyncResult(didMakeChanges: true);
       } else {
@@ -444,7 +444,7 @@ class Sync {
       }
     }
 
-    if (applyableChanges.isEmpty) {
+    if (applicableChanges.isEmpty) {
       _logger.alert('No changes to apply.');
       return const SyncResult(didMakeChanges: false);
     }
@@ -453,7 +453,7 @@ class Sync {
     var pubspecContents = await _pubspecYamlFile.readAsString();
     for (final type in _args.dependencyTypes) {
       final changesForType =
-          applyableChanges.where((change) => change.type == type);
+          applicableChanges.where((change) => change.type == type);
       for (final change in changesForType) {
         pubspecContents = await _applyChangeToContent(
           contents: pubspecContents,
