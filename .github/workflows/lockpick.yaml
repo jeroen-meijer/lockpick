@@ -3,16 +3,16 @@ name: lockpick
 on:
   pull_request:
     paths:
-      - ".github/workflows/lockpick.yaml"
-      - "lib/**"
-      - "test/**"
-      - "pubspec.yaml"
+      - '.github/workflows/lockpick.yaml'
+      - 'lib/**'
+      - 'test/**'
+      - 'pubspec.yaml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: google/dart:2.14.2
+      image: google/dart:3.0.5
 
     steps:
       - uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
         uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
         with:
           path: coverage/lcov.info
-          exclude: "**/*.g.dart **/*.gen.dart"
+          exclude: '**/*.g.dart **/*.gen.dart'
 
   pana:
     runs-on: ubuntu-latest

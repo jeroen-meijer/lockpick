@@ -8,5 +8,5 @@ pub global activate lockpick
 lockpick --help
 
 # Sync dependency versions in the current directory
-lockpick sync ./
+lockpick sync
 ```

@@ -3,6 +3,11 @@
 This file is a manually maintained list of changes for each release. Feel
 free to add your changes here when sending pull requests.
 
+## 0.0.4 - 2023-07-07
+
+- fix: fix bug where lockpick would crash when run on a project with no dependencies
+- chore: upgrade dependencies & Dart version
+
 ## 0.0.3 - 2021-10-01
 
 - fix: fix bug where similarly named dependencies were incorrectly updated
