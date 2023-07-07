@@ -31,38 +31,56 @@ class DartCli {
     return RegExp(r'flutter:\n[ \t]+sdk:').hasMatch(contents);
   }
 
-  /// Runs `pub get`.
+  /// Returns true if the project at the given [path] is an FVM project.
   ///
-  /// If [useFlutterCli] is set to `null` (the default), the type of project
-  /// will be automatically detected.
-  Future<void> pubGet({
-    bool? useFlutterCli,
+  /// The provided [path] be a directory and contain a `.fvm` directory with
+  /// an `fvm_config.json` file.
+  bool isFvmProject(String projectPath) {
+    final fvmConfigPath = path.join(projectPath, '.fvm', 'fvm_config.json');
+    return File(fvmConfigPath).existsSync();
+  }
+
+  /// Runs `dart pub upgrade` or `flutter pub upgrade`.
+  Future<void> pubUpgrade({
     String? workingDirectory,
   }) async {
-    final useFlutter =
-        useFlutterCli ?? await isFlutterProject(workingDirectory ?? '.');
+    await runDartOrFlutterCommand(
+      ['pub', 'upgrade'],
+      workingDirectory: workingDirectory,
+    );
+  }
 
+  /// Runs `dart pub get` or `flutter pub get`.
+  Future<void> pubGet({
+    String? workingDirectory,
+  }) async {
     await _run(
-      useFlutter ? 'flutter' : 'dart',
+      'dart',
       ['pub', 'get'],
       workingDirectory: workingDirectory,
     );
   }
 
-  /// Runs `pub upgrade`.
+  /// Runs the given Flutter or Dart command.
   ///
-  /// If [useFlutterCli] is set to `null` (the default), the type of project
-  /// will be automatically detected.
-  Future<void> pubUpgrade({
-    bool? useFlutterCli,
+  /// - If this project uses FVM, the command will be run with `fvm`.
+  /// - If this project is a Flutter project, the command will be run with
+  ///   `flutter`. Otherwise, it will be run with `dart`.
+  Future<void> runDartOrFlutterCommand(
+    List<String> commandParts, {
     String? workingDirectory,
   }) async {
-    final useFlutter =
-        useFlutterCli ?? await isFlutterProject(workingDirectory ?? '.');
+    final useFlutter = await isFlutterProject(workingDirectory ?? '.');
+    final useFvm = isFvmProject(workingDirectory ?? '.');
+    final fullCommandParts = [
+      if (useFvm) 'fvm',
+      if (useFlutter) 'flutter' else 'dart',
+      ...commandParts,
+    ];
 
     await _run(
-      useFlutter ? 'flutter' : 'dart',
-      ['pub', 'upgrade'],
+      fullCommandParts.first,
+      fullCommandParts.skip(1).toList(),
       workingDirectory: workingDirectory,
     );
   }

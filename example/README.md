@@ -2,11 +2,11 @@
 
 ```sh
 # Activate lockpick
-pub global activate lockpick
+$ dart pub global activate lockpick
 
 # See usage information
-lockpick --help
+$ lockpick --help
 
 # Sync dependency versions in the current directory
-lockpick sync ./
+$ lockpick sync
 ```

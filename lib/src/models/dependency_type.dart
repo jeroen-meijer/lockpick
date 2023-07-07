@@ -22,7 +22,7 @@ extension NullableDependencyTypeExtensions on DependencyType? {
       case DependencyType.dev:
         return 'dev_dependencies';
       case DependencyType.main:
-      default:
+      case null:
         return 'dependencies';
     }
   }

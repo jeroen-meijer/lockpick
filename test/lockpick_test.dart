@@ -21,7 +21,7 @@ Global options:
 
 Available commands:
   sync   lockpick sync [project_path]
-         Syncs dependencies between a pubspec.yaml and a pubspec.lock file. Will run "[flutter] pub get" and "[flutter] pub upgade" in the specified project path before syncing.
+         Syncs dependencies between a pubspec.yaml and a pubspec.lock file. Will run "[flutter] pub get" and "[flutter] pub upgrade" in the specified project path before syncing.
 
 Run "lockpick help <command>" for more information about a command.''';
 
@@ -57,7 +57,7 @@ void main() {
       });
 
       test('can be instantiated without an explicit logger instance', () {
-        expect(() => LockpickCommandRunner(), returnsNormally);
+        expect(LockpickCommandRunner.new, returnsNormally);
       });
     });
 
@@ -117,16 +117,19 @@ void main() {
 
         final result = await subject.run(['--version']);
         expect(result, ExitCode.software.code);
+
         verifyInOrder([
           () => logger.err(styleBold.wrap('Unexpected error occurred')),
           () => logger.err(exception.toString()),
-          () => logger.err(any(
-                that: startsWith('#0      When.thenThrow.<anonymous closure>'),
-              )),
+          () => logger.err(
+                any(
+                  that: contains('#0      When.thenThrow.<anonymous closure>'),
+                ),
+              ),
         ]);
       });
 
-      // TODO(@jeroen-meijer): Add more tests from https://github.com/felangel/mason/blob/master/test/command_runner_test.dart
+      // TODO(jeroen-meijer): Add more tests from https://github.com/felangel/mason/blob/master/test/command_runner_test.dart
     });
   });
 }
