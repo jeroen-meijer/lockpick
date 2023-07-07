@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: dart:3.0.5
+      image: dart:3.0.0
 
     steps:
       - uses: actions/checkout@v2
@@ -38,7 +38,7 @@ jobs:
   pana:
     runs-on: ubuntu-latest
     container:
-      image: dart:3.0.5
+      image: dart:3.0.0
 
     steps:
       - uses: actions/checkout@v2.3.4
