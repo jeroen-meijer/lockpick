@@ -86,7 +86,7 @@ class SyncCommand extends Command<int> {
   @override
   String get description =>
       'Syncs dependencies between a pubspec.yaml and a pubspec.lock file. '
-      'Will run "[flutter] pub get" and "[flutter] pub upgade" in '
+      'Will run "[flutter] pub get" and "[flutter] pub upgrade" in '
       'the specified project path before syncing.';
 
   @override
@@ -158,8 +158,10 @@ class SyncCommand extends Command<int> {
     final dependencyTypesString =
         _argResults['dependency-types'] as List<String>;
     final dependencyTypes = dependencyTypesString
-        .map((dependencyTypeString) =>
-            DependencyType.values.findEnumValue(dependencyTypeString))
+        .map(
+          (dependencyTypeString) =>
+              DependencyType.values.findEnumValue(dependencyTypeString),
+        )
         .toList(growable: false);
 
     final args = SyncArgs(
@@ -267,13 +269,15 @@ class Sync {
           final dependency = entry.value['dependency'] as String;
           return dependency.startsWith('direct');
         })
-        .map((entry) => SimpleDependency(
-              name: entry.key,
-              version: entry.value['version'] as String,
-              type: entry.value['dependency'] == 'direct main'
-                  ? DependencyType.main
-                  : DependencyType.dev,
-            ))
+        .map(
+          (entry) => SimpleDependency(
+            name: entry.key,
+            version: entry.value['version'] as String,
+            type: entry.value['dependency'] == 'direct main'
+                ? DependencyType.main
+                : DependencyType.dev,
+          ),
+        )
         .toList(growable: false);
 
     return directPackages;
@@ -289,11 +293,13 @@ class Sync {
       final depsForType = Map<String, dynamic>.from(depsForTypeYamlMap)
           .entries
           .where((entry) => entry.value == null || entry.value is String)
-          .map((entry) => SimpleDependency(
-                name: entry.key,
-                version: '${entry.value ?? ''}',
-                type: type,
-              ));
+          .map(
+            (entry) => SimpleDependency(
+              name: entry.key,
+              version: '${entry.value ?? ''}',
+              type: type,
+            ),
+          );
       dependencies.addAll(depsForType);
     }
 
@@ -341,7 +347,7 @@ class Sync {
       }
     }
 
-    assert(hasEncounteredType);
+    assert(hasEncounteredType, 'Could not find dependency type in pubspec.');
 
     return lines.join('\n');
   }
@@ -378,12 +384,14 @@ class Sync {
       for (final dependency in dependenciesForType) {
         final package =
             directLockPackages.firstWhere((dep) => dep.name == dependency.name);
-        allChanges.add(DependencyChange(
-          name: dependency.name,
-          originalVersion: dependency.version,
-          newVersion: package.version,
-          type: type,
-        ));
+        allChanges.add(
+          DependencyChange(
+            name: dependency.name,
+            originalVersion: dependency.version,
+            newVersion: package.version,
+            type: type,
+          ),
+        );
       }
     }
     stopProgress();
@@ -400,9 +408,11 @@ class Sync {
             change.originalVersion.orIfEmpty(styleItalic.wrap('empty')!);
 
         if (!change.hasChange) {
-          _logger.info(lightGray.wrap(
-            '  ${change.name} ($originalVersionString)',
-          ));
+          _logger.info(
+            lightGray.wrap(
+              '  ${change.name} ($originalVersionString)',
+            ),
+          );
         } else {
           final icon = change.originalVersion.isEmpty
               ? green.wrap('+')
@@ -421,10 +431,10 @@ class Sync {
 
     _logger.info('');
 
-    final applyableChanges = allChanges.where((change) => change.hasChange);
+    final applicableChanges = allChanges.where((change) => change.hasChange);
 
     if (_args.dryRun) {
-      if (applyableChanges.isNotEmpty) {
+      if (applicableChanges.isNotEmpty) {
         _logger.warn('Dry-run mode: some changes would be made.');
         return const SyncResult(didMakeChanges: true);
       } else {
@@ -433,7 +443,7 @@ class Sync {
       }
     }
 
-    if (applyableChanges.isEmpty) {
+    if (applicableChanges.isEmpty) {
       _logger.alert('No changes to apply.');
       return const SyncResult(didMakeChanges: false);
     }
@@ -442,7 +452,7 @@ class Sync {
     var pubspecContents = await _pubspecYamlFile.readAsString();
     for (final type in _args.dependencyTypes) {
       final changesForType =
-          applyableChanges.where((change) => change.type == type);
+          applicableChanges.where((change) => change.type == type);
       for (final change in changesForType) {
         pubspecContents = await _applyChangeToContent(
           contents: pubspecContents,

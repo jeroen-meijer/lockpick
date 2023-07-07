@@ -28,7 +28,7 @@ class Logger {
   int _index = 0;
 
   /// Flushes internal message queue.
-  void flush([Function(String?)? print]) {
+  void flush([void Function(String?)? print]) {
     final writeln = print ?? info;
     for (final message in _queue) {
       writeln(message);
