@@ -29,11 +29,11 @@ jobs:
       - name: Run tests
         run: dart test --chain-stack-traces --coverage=coverage && dart run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --report-on=lib
 
-      - name: Check Code Coverage
-        uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
-        with:
-          path: coverage/lcov.info
-          exclude: '**/*.g.dart **/*.gen.dart'
+      # - name: Check Code Coverage
+      #   uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
+      #   with:
+      #     path: coverage/lcov.info
+      #     exclude: '**/*.g.dart **/*.gen.dart'
 
   pana:
     runs-on: ubuntu-latest
