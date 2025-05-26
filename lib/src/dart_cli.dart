@@ -9,9 +9,7 @@ import 'package:universal_io/io.dart';
 /// {@endtemplate}
 class DartCli {
   /// {@macro dart_cli}
-  DartCli({
-    Logger? logger,
-  }) : _logger = logger ?? Logger();
+  DartCli({Logger? logger}) : _logger = logger ?? Logger();
 
   final Logger _logger;
 
@@ -41,24 +39,16 @@ class DartCli {
   }
 
   /// Runs `dart pub upgrade` or `flutter pub upgrade`.
-  Future<void> pubUpgrade({
-    String? workingDirectory,
-  }) async {
-    await runDartOrFlutterCommand(
-      ['pub', 'upgrade'],
-      workingDirectory: workingDirectory,
-    );
+  Future<void> pubUpgrade({String? workingDirectory}) async {
+    await runDartOrFlutterCommand([
+      'pub',
+      'upgrade',
+    ], workingDirectory: workingDirectory);
   }
 
   /// Runs `dart pub get` or `flutter pub get`.
-  Future<void> pubGet({
-    String? workingDirectory,
-  }) async {
-    await _run(
-      'dart',
-      ['pub', 'get'],
-      workingDirectory: workingDirectory,
-    );
+  Future<void> pubGet({String? workingDirectory}) async {
+    await _run('dart', ['pub', 'get'], workingDirectory: workingDirectory);
   }
 
   /// Runs the given Flutter or Dart command.
@@ -104,7 +94,7 @@ class DartCli {
     if (result.exitCode != 0) {
       final values = {
         'Standard out': result.stdout.toString().trim(),
-        'Standard error': result.stderr.toString().trim()
+        'Standard error': result.stderr.toString().trim(),
       }..removeWhere((k, v) => v.isEmpty);
 
       var message = 'Unknown error';

@@ -17,17 +17,16 @@ import 'package:yaml/yaml.dart';
 /// Usage: `lockpick` or `lockpick sync`
 /// {@endtemplate}
 class SyncCommand extends Command<int> {
-  SyncCommand({
-    DartCli? dartCli,
-    Logger? logger,
-  })  : _dartCli = dartCli ?? DartCli(),
-        _logger = logger ?? Logger() {
+  SyncCommand({DartCli? dartCli, Logger? logger})
+    : _dartCli = dartCli ?? DartCli(),
+      _logger = logger ?? Logger() {
     argParser
       ..addVerboseFlag()
       ..addFlag(
         'empty-only',
         abbr: 'e',
-        help: 'Only add dependency versions in the pubspec.yaml for which '
+        help:
+            'Only add dependency versions in the pubspec.yaml for which '
             'there is no specific version set.',
       )
       ..addOption(
@@ -40,7 +39,8 @@ class SyncCommand extends Command<int> {
           CaretSyntaxPreference.never.describe(),
         ],
         allowedHelp: {
-          CaretSyntaxPreference.auto.describe(): 'Interpret caret syntax '
+          CaretSyntaxPreference.auto.describe():
+              'Interpret caret syntax '
               'preference from existing dependencies in the pubspec.yaml file '
               'if possible. Will default to "always" if no trend is detected.',
           CaretSyntaxPreference.always.describe(): 'Always use caret syntax.',
@@ -52,7 +52,8 @@ class SyncCommand extends Command<int> {
         'dependency-types',
         aliases: ['types'],
         abbr: 't',
-        help: 'Specifies what type of dependencies to sync. '
+        help:
+            'Specifies what type of dependencies to sync. '
             'Will sync all dependencies by default.',
         allowed: [
           DependencyType.main.describe(),
@@ -117,9 +118,10 @@ class SyncCommand extends Command<int> {
       _logger.alert('Running in dry-run mode. No actual changes will be made.');
     }
 
-    final workingDirectory = _argResults.rest.isEmpty
-        ? Directory.current
-        : Directory(_argResults.rest.first);
+    final workingDirectory =
+        _argResults.rest.isEmpty
+            ? Directory.current
+            : Directory(_argResults.rest.first);
 
     Directory.current = workingDirectory;
 
@@ -152,8 +154,9 @@ class SyncCommand extends Command<int> {
 
     final caretSyntaxPreferenceString =
         _argResults['caret-syntax-preference'] as String;
-    final caretSyntaxPreference =
-        CaretSyntaxPreference.values.findEnumValue(caretSyntaxPreferenceString);
+    final caretSyntaxPreference = CaretSyntaxPreference.values.findEnumValue(
+      caretSyntaxPreferenceString,
+    );
 
     final dependencyTypesString =
         _argResults['dependency-types'] as List<String>;
@@ -172,10 +175,7 @@ class SyncCommand extends Command<int> {
       dependencyTypes: dependencyTypes,
     );
 
-    final result = await Sync(
-      args: args,
-      logger: _logger,
-    ).run();
+    final result = await Sync(args: args, logger: _logger).run();
 
     if (dryRun) {
       return result.didMakeChanges ? 1 : 0;
@@ -209,12 +209,12 @@ class SyncArgs extends Equatable {
 
   @override
   List<Object> get props => [
-        emptyOnly,
-        dryRun,
-        workingDirectory,
-        caretSyntaxPreference,
-        dependencyTypes,
-      ];
+    emptyOnly,
+    dryRun,
+    workingDirectory,
+    caretSyntaxPreference,
+    dependencyTypes,
+  ];
 }
 
 /// {@template sync_result}
@@ -222,9 +222,7 @@ class SyncArgs extends Equatable {
 /// {@endtemplate}
 class SyncResult extends Equatable {
   /// {@macro sync_result}
-  const SyncResult({
-    required this.didMakeChanges,
-  });
+  const SyncResult({required this.didMakeChanges});
 
   final bool didMakeChanges;
 
@@ -237,11 +235,9 @@ class SyncResult extends Equatable {
 /// {@endtemplate}
 @visibleForTesting
 class Sync {
-  Sync({
-    required SyncArgs args,
-    Logger? logger,
-  })  : _args = args,
-        _logger = logger ?? Logger();
+  Sync({required SyncArgs args, Logger? logger})
+    : _args = args,
+      _logger = logger ?? Logger();
 
   final SyncArgs _args;
   final Logger _logger;
@@ -273,9 +269,10 @@ class Sync {
           (entry) => SimpleDependency(
             name: entry.key,
             version: entry.value['version'] as String,
-            type: entry.value['dependency'] == 'direct main'
-                ? DependencyType.main
-                : DependencyType.dev,
+            type:
+                entry.value['dependency'] == 'direct main'
+                    ? DependencyType.main
+                    : DependencyType.dev,
           ),
         )
         .toList(growable: false);
@@ -291,8 +288,7 @@ class Sync {
     for (final type in DependencyType.values) {
       final depsForTypeYamlMap =
           pubspecMap[type.getPubspecName()] as YamlMap? ?? YamlMap();
-      final depsForType = Map<String, dynamic>.from(depsForTypeYamlMap)
-          .entries
+      final depsForType = Map<String, dynamic>.from(depsForTypeYamlMap).entries
           .where((entry) => entry.value == null || entry.value is String)
           .map(
             (entry) => SimpleDependency(
@@ -309,10 +305,11 @@ class Sync {
 
   Future<bool> _getCaretUsageTrend(List<SimpleDependency> dependencies) async {
     final allDepsAmount = dependencies.length;
-    final caretsUsed = dependencies
-        .map((dep) => dep.version)
-        .where((version) => version.startsWith('^'))
-        .length;
+    final caretsUsed =
+        dependencies
+            .map((dep) => dep.version)
+            .where((version) => version.startsWith('^'))
+            .length;
 
     _logger.debug('$caretsUsed out of $allDepsAmount dependencies use carets.');
 
@@ -338,8 +335,9 @@ class Sync {
         if (key == dependencyTypeName) {
           hasEncounteredType = true;
         } else if (hasEncounteredType && key == change.name) {
-          final firstCharIndex =
-              line.split('').indexWhere((char) => char != ' ');
+          final firstCharIndex = line
+              .split('')
+              .indexWhere((char) => char != ' ');
           final whitespace = ' ' * firstCharIndex;
           final newVersionString =
               '${useCaretSyntax ? '^' : ''}${change.newVersion}';
@@ -380,11 +378,13 @@ class Sync {
     stopProgress = _logger.progress('Queueing changes...');
     final allChanges = <DependencyChange>[];
     for (final type in _args.dependencyTypes) {
-      final dependenciesForType =
-          allPubspecDependencies.where((dep) => dep.type == type);
+      final dependenciesForType = allPubspecDependencies.where(
+        (dep) => dep.type == type,
+      );
       for (final dependency in dependenciesForType) {
-        final package =
-            directLockPackages.firstWhere((dep) => dep.name == dependency.name);
+        final package = directLockPackages.firstWhere(
+          (dep) => dep.name == dependency.name,
+        );
         allChanges.add(
           DependencyChange(
             name: dependency.name,
@@ -405,21 +405,22 @@ class Sync {
 
       final changesForType = allChanges.where((change) => change.type == type);
       for (final change in changesForType) {
-        final originalVersionString =
-            change.originalVersion.orIfEmpty(styleItalic.wrap('empty')!);
+        final originalVersionString = change.originalVersion.orIfEmpty(
+          styleItalic.wrap('empty')!,
+        );
 
         if (!change.hasChange) {
           _logger.info(
-            lightGray.wrap(
-              '  ${change.name} ($originalVersionString)',
-            ),
+            lightGray.wrap('  ${change.name} ($originalVersionString)'),
           );
         } else {
-          final icon = change.originalVersion.isEmpty
-              ? green.wrap('+')
-              : lightGreen.wrap('↑');
-          final newVersionString = styleBold
-              .wrap('${useCaretSyntax ? '^' : ''}${change.newVersion}');
+          final icon =
+              change.originalVersion.isEmpty
+                  ? green.wrap('+')
+                  : lightGreen.wrap('↑');
+          final newVersionString = styleBold.wrap(
+            '${useCaretSyntax ? '^' : ''}${change.newVersion}',
+          );
 
           _logger.info(
             '$icon ${change.name} '
@@ -452,8 +453,9 @@ class Sync {
     stopProgress = _logger.progress('Preparing changes...');
     var pubspecContents = await _pubspecYamlFile.readAsString();
     for (final type in _args.dependencyTypes) {
-      final changesForType =
-          applicableChanges.where((change) => change.type == type);
+      final changesForType = applicableChanges.where(
+        (change) => change.type == type,
+      );
       for (final change in changesForType) {
         pubspecContents = await _applyChangeToContent(
           contents: pubspecContents,

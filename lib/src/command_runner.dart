@@ -13,14 +13,13 @@ import 'package:lockpick/src/version.dart';
 /// {@endtemplate}
 class LockpickCommandRunner extends CommandRunner<int> {
   /// {@macro lockpick_command_runner}
-  LockpickCommandRunner({
-    Logger? logger,
-  })  : _logger = logger ?? Logger(),
-        super(
-          'lockpick',
-          'A CLI for syncing Dart dependency versions '
-              'between pubspec.yaml and pubspec.lock files. 🔒',
-        ) {
+  LockpickCommandRunner({Logger? logger})
+    : _logger = logger ?? Logger(),
+      super(
+        'lockpick',
+        'A CLI for syncing Dart dependency versions '
+            'between pubspec.yaml and pubspec.lock files. 🔒',
+      ) {
     argParser
       ..addFlag(
         'version',
@@ -56,6 +55,8 @@ class LockpickCommandRunner extends CommandRunner<int> {
         ..info('')
         ..info(usage);
       return ExitCode.usage.code;
+      // We don't care what error happened, we just want to log it.
+      // ignore: avoid_catches_without_on_clauses
     } catch (e, st) {
       _logger
         ..err(styleBold.wrap('Unexpected error occurred'))

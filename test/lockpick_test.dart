@@ -1,3 +1,6 @@
+// We want to explicitly ignore const constructors in this file because
+// we need to test their behavior, and constructors won't be run when called in
+// a const context.
 // ignore_for_file: prefer_const_constructors
 import 'package:args/command_runner.dart';
 import 'package:io/ansi.dart';
@@ -46,9 +49,7 @@ void main() {
     });
 
     LockpickCommandRunner buildSubject() {
-      return LockpickCommandRunner(
-        logger: logger,
-      );
+      return LockpickCommandRunner(logger: logger);
     }
 
     group('constructor', () {
@@ -122,10 +123,8 @@ void main() {
           () => logger.err(styleBold.wrap('Unexpected error occurred')),
           () => logger.err(exception.toString()),
           () => logger.err(
-                any(
-                  that: contains('#0      When.thenThrow.<anonymous closure>'),
-                ),
-              ),
+            any(that: contains('#0      When.thenThrow.<anonymous closure>')),
+          ),
         ]);
       });
 

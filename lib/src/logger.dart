@@ -15,7 +15,7 @@ class Logger {
     '⠦',
     '⠧',
     '⠇',
-    '⠏'
+    '⠏',
   ];
 
   /// Indicates if verbose [debug] messages should be logged.
@@ -67,8 +67,9 @@ class Logger {
     });
     return ([String? update]) {
       _stopwatch.stop();
-      final time =
-          (_stopwatch.elapsed.inMilliseconds / 1000.0).toStringAsFixed(1);
+      final time = (_stopwatch.elapsed.inMilliseconds / 1000.0).toStringAsFixed(
+        1,
+      );
       stdout.write(
         '''${lightGreen.wrap('\b${'\b' * (message.length + 4)}✓')} ${update ?? message} (${time}s)\n''',
       );

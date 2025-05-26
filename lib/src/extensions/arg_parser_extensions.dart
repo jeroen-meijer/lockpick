@@ -7,7 +7,8 @@ extension ArgParserExtensions on ArgParser {
       'verbose',
       abbr: 'v',
       negatable: false,
-      help: 'Print debug information. '
+      help:
+          'Print debug information. '
           'Can be used with any command.',
     );
   }
