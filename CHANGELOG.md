@@ -3,6 +3,10 @@
 This file is a manually maintained list of changes for each release. Feel
 free to add your changes here when sending pull requests.
 
+## 0.1.1 - 2025-05-28
+
+- fix: make pub get command use flutter and fvm if relevant
+
 ## 0.1.0 - 2025-05-26
 
 - chore: upgrade dependencies & Dart version, format all files
