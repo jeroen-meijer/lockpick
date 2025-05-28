@@ -118,10 +118,9 @@ class SyncCommand extends Command<int> {
       _logger.alert('Running in dry-run mode. No actual changes will be made.');
     }
 
-    final workingDirectory =
-        _argResults.rest.isEmpty
-            ? Directory.current
-            : Directory(_argResults.rest.first);
+    final workingDirectory = _argResults.rest.isEmpty
+        ? Directory.current
+        : Directory(_argResults.rest.first);
 
     Directory.current = workingDirectory;
 
@@ -258,8 +257,9 @@ class Sync {
 
   Future<List<SimpleDependency>> _getDirectLockPackages() async {
     final lockMap = await _loadYamlFile(_pubspecLockFile);
-    final lockPackages =
-        Map<String, YamlMap>.from(lockMap['packages'] as YamlMap).entries;
+    final lockPackages = Map<String, YamlMap>.from(
+      lockMap['packages'] as YamlMap,
+    ).entries;
     final directPackages = lockPackages
         .where((entry) {
           final dependency = entry.value['dependency'] as String;
@@ -269,10 +269,9 @@ class Sync {
           (entry) => SimpleDependency(
             name: entry.key,
             version: entry.value['version'] as String,
-            type:
-                entry.value['dependency'] == 'direct main'
-                    ? DependencyType.main
-                    : DependencyType.dev,
+            type: entry.value['dependency'] == 'direct main'
+                ? DependencyType.main
+                : DependencyType.dev,
           ),
         )
         .toList(growable: false);
@@ -305,11 +304,10 @@ class Sync {
 
   Future<bool> _getCaretUsageTrend(List<SimpleDependency> dependencies) async {
     final allDepsAmount = dependencies.length;
-    final caretsUsed =
-        dependencies
-            .map((dep) => dep.version)
-            .where((version) => version.startsWith('^'))
-            .length;
+    final caretsUsed = dependencies
+        .map((dep) => dep.version)
+        .where((version) => version.startsWith('^'))
+        .length;
 
     _logger.debug('$caretsUsed out of $allDepsAmount dependencies use carets.');
 
@@ -366,8 +364,8 @@ class Sync {
 
     final useCaretSyntax =
         _args.caretSyntaxPreference == CaretSyntaxPreference.auto
-            ? await _getCaretUsageTrend(allPubspecDependencies)
-            : _args.caretSyntaxPreference == CaretSyntaxPreference.always;
+        ? await _getCaretUsageTrend(allPubspecDependencies)
+        : _args.caretSyntaxPreference == CaretSyntaxPreference.always;
 
     if (useCaretSyntax) {
       _logger.info('Using caret syntax.');
@@ -414,10 +412,9 @@ class Sync {
             lightGray.wrap('  ${change.name} ($originalVersionString)'),
           );
         } else {
-          final icon =
-              change.originalVersion.isEmpty
-                  ? green.wrap('+')
-                  : lightGreen.wrap('↑');
+          final icon = change.originalVersion.isEmpty
+              ? green.wrap('+')
+              : lightGreen.wrap('↑');
           final newVersionString = styleBold.wrap(
             '${useCaretSyntax ? '^' : ''}${change.newVersion}',
           );
